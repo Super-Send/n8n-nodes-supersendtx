@@ -1,0 +1,37 @@
+# Publishes this n8n community node to npm on version tag push.
+# Required for n8n Creator Portal verification (provenance).
+#
+# One-time: configure npm Trusted Publisher for this repo + publish.yml,
+# or set NPM_TOKEN as a repo secret.
+#
+# Release: npm run release (bumps version, tags, pushes → this workflow).
+
+name: Publish
+
+on:
+  push:
+    tags:
+      - '*.*.*'
+
+jobs:
+  publish:
+    name: Publish to npm
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm ci
+      - name: Release
+        run: |
+          [ -n "$NPM_TOKEN" ] && npm config set //registry.npmjs.org/:_authToken "$NPM_TOKEN"
+          npm run release
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
