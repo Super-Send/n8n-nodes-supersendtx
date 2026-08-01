@@ -6,6 +6,8 @@
 # - NPM_TOKEN repo secret (classic automation/publish token)
 #
 # Release: bump version, push tag *.*.* → this workflow.
+# Note: --ignore-scripts skips n8n-node prerelease (blocks direct publish);
+# build already ran in the previous step.
 
 name: Publish
 
@@ -46,7 +48,7 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish
-        run: npm publish --access public --provenance
+        run: npm publish --access public --provenance --ignore-scripts
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
