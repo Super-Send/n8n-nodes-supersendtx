@@ -26,6 +26,67 @@ npm install n8n-nodes-supersendtx
 | Email | Get | `GET /emails/{id}` |
 | Email | Get Many | `GET /emails` |
 
+## Example: Send a welcome email
+
+This walkthrough sends a welcome email when a new user signs up (e.g. after a Webhook or form trigger).
+
+### 1. Credentials
+
+Create **SuperSend TX API** credentials in n8n:
+
+| Field | Value |
+|-------|--------|
+| API Key | `stx_live_abc123…` (from the SuperSend TX dashboard) |
+| API Base URL | `https://api.supersendtx.com` |
+
+### 2. Workflow
+
+1. Add a trigger (e.g. **Webhook** or **Form Trigger**).
+2. Add a **SuperSend TX** node and connect it to the trigger.
+3. Select your credentials.
+4. Configure the node:
+
+| Field | Value |
+|-------|--------|
+| Resource | Email |
+| Operation | Send |
+| From | `welcome@yourdomain.com` |
+| To | `={{ $json.email }}` |
+| Subject | `Welcome to our app, {{ $json.name }}!` |
+| HTML | `<h1>Welcome, {{ $json.name }}!</h1><p>Thanks for signing up. We're glad you're here.</p>` |
+| Text | `Welcome, {{ $json.name }}! Thanks for signing up.` |
+
+Optional under **Additional Fields**:
+
+| Field | Value |
+|-------|--------|
+| Reply To | `support@yourdomain.com` |
+| Tag | `welcome` |
+
+`From` must use a domain you have verified in SuperSend TX.
+
+### 3. Example input (from trigger)
+
+```json
+{
+  "email": "jane@example.com",
+  "name": "Jane"
+}
+```
+
+### 4. Example output (from SuperSend TX node)
+
+On success, the node returns the API response:
+
+```json
+{
+  "id": "msg_01h2x3y4z5a6b7c8d9e0f1g2h3",
+  "status": "sent"
+}
+```
+
+Use **Email → Get** with that `id` to check delivery status later, or **Email → Get Many** to list recent sends.
+
 ## Credentials
 
 | Field | Notes |
