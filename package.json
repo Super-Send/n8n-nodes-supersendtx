@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-supersendtx",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "n8n community node for SuperSend TX (transactional email API) \u2014 not SuperSend cold email",
   "license": "MIT",
   "homepage": "https://docs.supersendtx.com/guides/n8n",
